@@ -4,9 +4,6 @@ class Person {
         this._firstName = firstName;
         this._lastName = lastName;
         this._birthDate = new Date(birthDate);
-        this.toString = function () {
-            return `ID: ${this.id}, ${this.firstName}, ${this.lastName}, age: ${this.getAge()}`;
-        }
     }
 
     get id() {
@@ -42,15 +39,16 @@ class Person {
     fullName = function () {
         return `${this._firstName} ${this._lastName}`;
     }
+
+    toString() {
+        return `ID: ${this._id}, ${this.fullName()}, age: ${this.age}`;
+    }
 }
 
 class Employee extends Person {
     constructor(id, firstName, lastName, birthDate, salary) {
         super(id, firstName, lastName, birthDate);
         this._salary = +salary;
-        this.toString = function () {
-            return `ID: ${this.id}, ${this.firstName}, ${this.lastName}, age: ${this.getAge(), salary: ${this.salary}`;
-        }
     }
 
     get salary() {
@@ -61,5 +59,13 @@ class Employee extends Person {
         if (value > this._salary) {
             this._salary = +value;
         }
+    }
+
+    toString() {
+        return super.toString() + `, salary: ${this._salary}`;
+    }
+
+    createEmployeeDOMElement(tag) {
+        return createInfoElement(this.toString(), tag);
     }
 }

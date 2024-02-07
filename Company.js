@@ -26,26 +26,44 @@ class Company {
     get size(){
         return this._employees.length;
     }
-}
-calcStats.onclick = function () {
-    clearStats();
-    const divStats = document.createElement('div');
-    try {
-        let age = persons.reduce((accum, p) => accum + p.getAge(), 0) / employees.length;
-        const h3avg = createInfoElement(`Average age: ${age.toFixed(1)}`, 'h3');
-        age = persons.reduce((min, p) => p.getAge() < min ? p.getAge() : min, persons[0].getAge());
-        const h3min = createInfoElement(`Min age: ${age}`, 'h3');
-        age = persons.reduce((max, p) => p.getAge() > max ? p.getAge() : max, persons[0].getAge());
-        const h3max = createInfoElement(`Max age: ${age}`, 'h3');
-        let totalSalary = salaryArray.reduce((accum, e) => accum + e.getSalary(), 0);
-        const h3totalSalary = createInfoElement(`Total salary: ${totalSalary}`, 'h3');
-        let averageSalary = totalSalary / persons.length;
-        const h3averageSalary = createInfoElement(`Average salary: ${averageSalary}`, 'h3');
-        divStats.append(h3avg, h3min, h3max, h3averageSalary, totalSalary,h3totalSalary);
-    } catch (e) {
-        console.log(e);
-        const h3Error = createInfoElement('No data for processing', 'h3');
-        divStats.append(h3Error);
+
+    findEmployee(id) {
+        const index = this._employees.findIndex(e => e.id === id);
+        if (index >= 0) {
+            return this._employees[index];
+        }
     }
-    stats.appendChild(divStats);
-};
+
+    get avgAge() {
+        return this._employees.reduce((sum, e) => sum + e.age, 0) / this._employees.length;
+    }
+
+    get minAge() {
+        // return Math.min(...this._employees.map(e => e.age))
+        return this._employees.reduce((min, e) => e.age < min ? e.age : min, this._employees[0].age)
+    }
+
+    get maxAge() {
+        return this._employees.reduce((max, e) => e.age > max ? e.age : max, this._employees[0].age)
+    }
+
+    get totalSalary() {
+        return this._employees.reduce((sum, e) => sum + e.salary, 0);
+    }
+
+    get avgSalary() {
+        return this.totalSalary / this._employees.length;
+    }
+
+    createCompanyStatsDOMElement() {
+        const divStats = document.createElement('div');
+        const stats = [];
+        stats[0] = createInfoElement(`Average age: ${this.avgAge.toFixed(1)}`, 'h3');
+        stats[1] = createInfoElement(`Min age: ${this.minAge.toFixed(1)}`, 'h3');
+        stats[2] = createInfoElement(`Max age: ${this.maxAge.toFixed(1)}`, 'h3');
+        stats[3] = createInfoElement(`Average salary: ${this.avgSalary.toFixed(2)}`, 'h3');
+        stats[4] = createInfoElement(`Total salary: ${this.totalSalary.toFixed(2)}`, 'h3');
+        divStats.append(...stats);
+        return divStats;
+    }
+}
